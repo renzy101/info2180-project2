@@ -19,8 +19,8 @@ var puzzlePieces; //Array of puzzle pieces.
  */
 function arrangeTiles(tile, index)
 {
-    positionX(tile, index);
-    positionY(tile, index);
+    posX(tile, index);
+    posY(tile, index);
 
     tile.style.backgroundPosition = (400 - getY(index)) + "px" + " " + (400 - getX(index)) + "px";
 }
@@ -29,7 +29,7 @@ function arrangeTiles(tile, index)
 /**
  * Function to layout the tiles in the puzzle in the correct order.
  */
-function layoutBoard()
+function arrangePuzzle()
 {
     puzzlePieces = $('#puzzlearea div');
     var idCounter = 0;
@@ -52,8 +52,8 @@ function layoutBoard()
  */
 function move(tile, indexToMoveTo)
 {
-    positionX(tile, indexToMoveTo);
-    positionY(tile, indexToMoveTo);
+    posX(tile, indexToMoveTo);
+    posY(tile, indexToMoveTo);
 
     BOARD[indexToMoveTo] = 1;
     BOARD[tile.id] = 0;
@@ -65,7 +65,7 @@ function move(tile, indexToMoveTo)
  * Moves a tile and determine if game is won.
  * @param {puzzlepiece} tile  represents a tile in the puzzle.
  */
-function makeMove(tile)
+function moveTile(tile)
 {
     puzzlePieces[tile].onclick = function()
     {
@@ -95,7 +95,7 @@ function makeRandomMove(tile)
 /**
  * Shuffles the tiles on the board.
  */
-function layoutBoardRandom()
+function arrangePuzzleRandom()
 {
     for (var n = 0; n < 1000; n++)
     {
@@ -112,10 +112,10 @@ function layoutBoardRandom()
  */
 function shuffle()
 {
-    layoutBoardRandom();
+    arrangePuzzleRandom();
     document.body.style.backgroundColor = "white";
     var heading = $("#h1");
-    heading.innerHTML = "CSE 190 M Fifteen Puzzle";
+    heading.innerHTML = "Fifteen Puzzle";
 
 }
 
@@ -125,11 +125,11 @@ function shuffle()
  */
 function gameOn()
 {
-    layoutBoard();
+    arrangePuzzle();
     for (var i = 0; i < 15; i++) //FIXME change to each loop
     {
-        makeMove(i);
-        onHover(i);
+        moveTile(i);
+        hover(i);
     }
 }
 
@@ -138,7 +138,7 @@ function gameOn()
  * Highlights a movable.
  * @param  {int} i index of tile.
  */
-function onHover(i)
+function hover(i)
 {
     puzzlePieces[i].onmouseover = function()
     {
@@ -182,7 +182,7 @@ function getX(index)
  * @param  {puzzlepiece} tile  represents a tile in the puzzle.
  * @param  {int} index index of tile.
  */
-function positionY(tile, index)
+function posY(tile, index)
 {
     tile.style.left = getY(index) + "px";
 }
@@ -193,7 +193,7 @@ function positionY(tile, index)
  * @param  {puzzlepiece} tile  represents a tile in the puzzle.
  * @param  {int} index index of tile.
  */
-function positionX(tile, index)
+function posX(tile, index)
 {
     tile.style.top = getX(index) + "px";
 
@@ -206,11 +206,11 @@ function positionX(tile, index)
  */
 function emptyTile()
 {
-    for (var tilePosition = 0; tilePosition < 16; tilePosition++)
+    for (var tilePos = 0; tilePos < 16; tilePos++)
     {
-        if (BOARD[tilePosition] === 0)
+        if (BOARD[tilePos] === 0)
         {
-            return tilePosition;
+            return tilePos;
         }
     }
 }
@@ -218,16 +218,16 @@ function emptyTile()
 
 /**
  * Determines is tile is movable.
- * @param  {int} tilePosition index of the tile.
+ * @param  {int} tilePos index of the tile.
  */
-function movableTile(tilePosition)
+function movableTile(tilePos)
 {
-    var emptyTilePosition = emptyTile();
-    if ((tilePosition % 4 !== 0 && tilePosition - 1 === emptyTilePosition) ||
-        (tilePosition % 4 !== 3 && tilePosition + 1 === emptyTilePosition) ||
-        (tilePosition + 4 === emptyTilePosition) || (tilePosition - 4 === emptyTilePosition))
+    var emptytilePos = emptyTile();
+    if ((tilePos % 4 !== 0 && tilePos - 1 === emptytilePos) ||
+        (tilePos % 4 !== 3 && tilePos + 1 === emptytilePos) ||
+        (tilePos + 4 === emptytilePos) || (tilePos - 4 === emptytilePos))
     {
-        return emptyTilePosition;
+        return emptytilePos;
     }
     return -1;
 }
